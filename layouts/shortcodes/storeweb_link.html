@@ -1,0 +1,158 @@
+<!-- 小红帽友链_v2.00 2022-08-28 星球彦 https://storeweb.cn -->
+<!-- 小红帽友链_v2.00 2024-08-24 道与 https://daoyuchan.com hugo shortcode -->
+{{ with $siteId := .Get 0 }}
+这些友情链接是来自<a class='domain-url' href="" target="_blank" class="site-friend-link-project">个站商店</a>的一个子项目 <a href=""
+    target="_blank" class="site-friend-link-project">『<span class='site-url'></span>』</a>，点<a href="https://storeweb.cn"
+    target="_blank" class="site-friend-link-homepage"> 这里 </a>访问我在个站商店上的主页
+<br>
+
+<script src='https://libs.baidu.com/jquery/1.11.1/jquery.min.js'></script>
+
+<style>
+    .hide {
+        display: none;
+    }
+
+    .clear {
+        clear: both;
+    }
+
+    .site-friend-link {
+        margin-bottom: 20px;
+        overflow: hidden;
+        line-height: 175%;
+    }
+
+    .site-friend-link div {
+        position: relative;
+        float: left;
+        width: 266px;
+        margin: 12px 12px;
+        padding: 8px;
+        border-radius: 4px;
+        border: 1px solid #d1c7b7;
+        background-color: #fffef9;
+        overflow: visible;
+        min-height: 80px;
+    }
+
+    .site-friend-link-image {
+        float: left;
+        width: 50px;
+        height: 50px !important;
+        border-radius: 25px;
+        margin-top: 5px;
+    }
+
+    .site-friend-link-name {
+        float: left;
+        width: calc(100% - 50px);
+        text-align: left;
+        padding-left: 15px;
+        font-size: 16px;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
+
+    .site-friend-link-into {
+        float: left;
+        width: calc(100% - 50px);
+        text-align: left;
+        padding-left: 15px;
+        color: #999;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        font-size: 14px;
+    }
+
+    .site-friend-link-count {
+        position: absolute;
+        top: -8px;
+        right: -8px;
+        width: 16px;
+        height: 16px;
+        border-radius: 8px;
+        background-color: #ff7d1e;
+        color: white !important;
+        font-size: 10px;
+        padding-left: 5px;
+    }
+</style>
+<script data-no-instant>
+    var store = 'https://storeweb.cn'
+    // ----------------------------------- 配置 ---------------------------------------
+    var url = 'https://api.storeweb.cn/api/open/site-link';
+    // ----------------------------------- 配置 ---------------------------------------
+    function get_friend_link_api() {
+        $.ajax({
+            method: "POST",
+            url: url,
+            contentType: 'application/json',
+            data: JSON.stringify({"siteId": {{$siteId}}}),
+            success: function (result){
+                //console.log(result)
+                $('.domain-url').attr('href', result.data.domainUrl)
+                $('.site-friend-link-homepage').attr('href', result.data.siteUrl)
+                $('.site-url').html(result.data.introTitle)
+                $('.site-friend-link-project').attr('href', result.data.introUrl)
+                template_make(result.data.list)
+            }
+            
+        })
+    }
+    $(function () {
+        $('.site-friend-link').html('正在向『个站商店』请求友链数据……');
+        get_friend_link_api();
+    })
+    function template_make(list) {
+        //console.log(data)
+        $('.site-friend-link').html('');
+        $.each(list, function (key, value) {
+            //console.log(value.name);
+            var template = $('#links-template').text();
+            template = template.replace('%%name%%', value.name);
+            template = template.replace('%%logo_cn%%', value.logoUrl);
+            template = template.replace('%%intro_link%%', value.friendIntro);
+            template = template.replace('%%domain%%', value.http + value.domain);
+            template = template.replace('%%update_count%%', '');
+            if (!value.isRssUpdate) {
+                template = template.replace('%%update_hide%%', 'hide');
+            } else {
+                template = template.replace('%%update_hide%%', 'F');
+            }
+            var template_id = $(template);
+            $('.site-friend-link').append(template_id);
+        })
+    }
+    function set_storeweb_info(information) {
+        $('.site-friend-link-homepage').attr('href', information['homepage']);
+        $('.site-friend-link-project').attr('href', information['project']);
+        //$('.site-friend-link-storeweb').attr('href',information['storeweb']);
+    }
+</script>
+<div class="clear"></div>
+<div class="site-friend-link">
+</div>
+<script type="text/html" id="links-template" data-no-instant>
+    <div class="site-friend">
+        <a class="site-friend-link-count %%update_hide%%">
+            %%update_count%%
+        </a>
+        <img class="site-friend-link-image"
+             src="%%logo_cn%%"/>
+        <a class="site-friend-link-name"
+           href="%%domain%%" target="_blank">
+            %%name%%
+        </a>
+        <span class="site-friend-link-into">%%intro_link%%</span>
+    </div>
+</script>
+{{ else }}
+这些友情链接是来自<a class='domain-url' href="" target="_blank" class="site-friend-link-project">个站商店</a>的一个子项目 <a href=""
+    target="_blank" class="site-friend-link-project">『<span class='site-url'></span>』</a>，点<a href="https://storeweb.cn"
+    target="_blank" class="site-friend-link-homepage"> 这里 </a>访问我在个站商店上的主页，获取 siteId 值
+<br>
+
+{{ end }}
