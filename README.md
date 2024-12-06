@@ -1,4 +1,4 @@
-# storeweb_link
+## storeweb_link
 
 个站商店 storeweb.cn 小红帽友情链接 hugo shortcode 复刻版
 
@@ -13,3 +13,22 @@
 Demo:
 
 [《笔记星球》友链页面](https://note-star.cn/p/links)
+
+
+## TODO
+[ ] 增加不依赖jQuery的版本
+[ ] 样式极简版本
+
+
+## storeweb_link_local 
+
+构建站点时生成链接的 html 
+
+用法：
+```
+{{< storeweb_link_local 你的站点ID >}}
+```
+
+Demo:
+
+[不拆笔记友链页面](https://daoyuchan.com/links/)
